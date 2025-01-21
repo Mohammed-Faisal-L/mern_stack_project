@@ -57,7 +57,7 @@ userRouter.post("/createUser", userAuth, async (request, response) => {
   }
 });
 
-userRouter.post("/register", userAuth, async (request, response) => {
+userRouter.post("/register", async (request, response) => {
   try {
     const { username, email, age, password } = request.body;
     const hashedPassword = await bcrypt.hash(password, 10);
