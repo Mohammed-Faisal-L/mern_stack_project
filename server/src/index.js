@@ -19,7 +19,7 @@ server.use(cookieParser());
 
 server.use("/", userRouter);
 server.use("/", authRoute);
-server.use("/",userAuth)
+server.use("/", userAuth);
 
 dbConnect()
   .then(() => {

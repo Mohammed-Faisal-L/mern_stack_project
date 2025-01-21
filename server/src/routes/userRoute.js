@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const { userAuth } = require("../middleware/auth");
 const userRouter = express.Router();
 
-userRouter.get("/getUsers", async (request, response) => {
+userRouter.get("/getUsers", userAuth, async (request, response) => {
   try {
     const users = await UserModel.find({});
     response.json(users);
@@ -14,7 +14,7 @@ userRouter.get("/getUsers", async (request, response) => {
   }
 });
 
-userRouter.get("/getUser/:id", async (request, response) => {
+userRouter.get("/getUser/:id", userAuth, async (request, response) => {
   try {
     const user = await UserModel.findById(request.params.id);
     if (!user) {
@@ -26,7 +26,7 @@ userRouter.get("/getUser/:id", async (request, response) => {
   }
 });
 
-userRouter.put("/updateUser/:id", async (request, response) => {
+userRouter.put("/updateUser/:id", userAuth, async (request, response) => {
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       request.params.id,
@@ -39,7 +39,7 @@ userRouter.put("/updateUser/:id", async (request, response) => {
   }
 });
 
-userRouter.delete("/deleteUser/:id", async (request, response) => {
+userRouter.delete("/deleteUser/:id", userAuth, async (request, response) => {
   try {
     await UserModel.findByIdAndDelete(request.params.id);
     response.json({ message: "User deleted successfully" });
@@ -48,7 +48,7 @@ userRouter.delete("/deleteUser/:id", async (request, response) => {
   }
 });
 
-userRouter.post("/createUser", async (request, response) => {
+userRouter.post("/createUser", userAuth, async (request, response) => {
   try {
     const newUser = await UserModel.create(request.body);
     response.json(newUser);
@@ -57,7 +57,7 @@ userRouter.post("/createUser", async (request, response) => {
   }
 });
 
-userRouter.post("/register", async (request, response) => {
+userRouter.post("/register", userAuth, async (request, response) => {
   try {
     const { username, email, age, password } = request.body;
     const hashedPassword = await bcrypt.hash(password, 10);
