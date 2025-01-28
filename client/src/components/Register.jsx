@@ -28,14 +28,18 @@ const Register = () => {
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       try {
-        await axios.post("http://localhost:7777/register", values);
-        navigate("/login");
+        const response = await axios.post(
+          "http://localhost:7777/register",
+          values
+        );
+
+        if (response.status === 201) {
+          navigate("/login");
+        }
       } catch (error) {
         console.error(error);
-      } finally {
-        setSubmitting(false);
       }
     },
   });

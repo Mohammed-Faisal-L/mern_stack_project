@@ -39,16 +39,21 @@ const UpdateUser = () => {
   const formik = useFormik({
     initialValues: initialValues || { name: "", email: "", age: "" },
     validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       try {
-        await axios.put(`http://localhost:7777/user/updateUser/${id}`, values, {
-          withCredentials: true,
-        });
-        navigate("/getUsers");
+        const response = await axios.put(
+          `http://localhost:7777/user/updateUser/${id}`,
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          navigate("/getUsers");
+        }
       } catch (error) {
         console.error("Update failed:", error);
-      } finally {
-        setSubmitting(false);
       }
     },
     enableReinitialize: true, // Ensures form updates when initialValues change
