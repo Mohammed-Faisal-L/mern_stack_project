@@ -28,7 +28,14 @@ const UpdateUser = () => {
           `http://localhost:7777/user/getUser/${id}`,
           { withCredentials: true }
         );
-        setInitialValues({ name: data.name, email: data.email, age: data.age });
+
+        if (data) {
+          setInitialValues({
+            name: data.name,
+            email: data.email,
+            age: data.age,
+          });
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }

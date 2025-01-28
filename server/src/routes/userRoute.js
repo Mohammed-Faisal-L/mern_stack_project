@@ -39,14 +39,18 @@ userRouter.put("/user/updateUser/:id", userAuth, async (request, response) => {
   }
 });
 
-userRouter.delete("/user/deleteUser/:id", userAuth, async (request, response) => {
-  try {
-    await UserModel.findByIdAndDelete(request.params.id);
-    response.json({ message: "User deleted successfully" });
-  } catch (error) {
-    response.status(500).json({ error: "Error deleting user" });
+userRouter.delete(
+  "/user/deleteUser/:id",
+  userAuth,
+  async (request, response) => {
+    try {
+      await UserModel.findByIdAndDelete(request.params.id);
+      response.json({ message: "User deleted successfully" });
+    } catch (error) {
+      response.status(500).json({ error: "Error deleting user" });
+    }
   }
-});
+);
 
 userRouter.post("/user/createUser", userAuth, async (request, response) => {
   try {

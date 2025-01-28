@@ -20,7 +20,7 @@ const Login = () => {
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       try {
         const response = await axios.post(
           "http://localhost:7777/login",
@@ -35,8 +35,6 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Error during login:", error.response?.data || error);
-      } finally {
-        setSubmitting(false);
       }
     },
   });

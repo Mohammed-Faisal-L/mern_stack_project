@@ -24,7 +24,7 @@ const CreateUser = () => {
         .required("Age is required")
         .typeError("Age must be a number"),
     }),
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       try {
         const response = await axios.post(
           "http://localhost:7777/user/createUser",
@@ -38,8 +38,6 @@ const CreateUser = () => {
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        setSubmitting(false);
       }
     },
   });
