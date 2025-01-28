@@ -24,7 +24,10 @@ const UpdateUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:7777/getUser/${id}`);
+        const { data } = await axios.get(
+          `http://localhost:7777/user/getUser/${id}`,
+          { withCredentials: true }
+        );
         setInitialValues({ name: data.name, email: data.email, age: data.age });
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -34,11 +37,13 @@ const UpdateUser = () => {
   }, [id]);
 
   const formik = useFormik({
-    initialValues: initialValues || { name: "", email: "", age: "" }, // Avoid errors before data is loaded
+    initialValues: initialValues || { name: "", email: "", age: "" },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await axios.put(`http://localhost:7777/updateUser/${id}`, values);
+        await axios.put(`http://localhost:7777/user/updateUser/${id}`, values, {
+          withCredentials: true,
+        });
         navigate("/getUsers");
       } catch (error) {
         console.error("Update failed:", error);

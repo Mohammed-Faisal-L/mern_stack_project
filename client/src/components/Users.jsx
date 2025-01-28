@@ -6,18 +6,36 @@ const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:7777/user/getUsers", {
+        withCredentials: true,
+      });
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:7777/getUsers")
-      .then((result) => setUsers(result.data))
-      .catch((error) => console.log(error));
+    fetchUsers();
   }, []);
 
-  const deleteUser = (id) => {
-    axios
-      .delete(`http://localhost:7777/deleteUser/${id}`)
-      .then(() => window.location.reload())
-      .catch((error) => console.log(error));
+  const deleteUser = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:7777/user/deleteUser/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
   return (

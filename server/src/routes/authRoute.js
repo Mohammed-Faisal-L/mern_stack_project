@@ -20,7 +20,11 @@ authRoute.post("/login", async (request, response) => {
 
     const token = jwt.sign({ id: user._id }, "Akash@123");
 
-    response.cookie("token", token);
+    response.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
     response.status(200).json({ message: "Logged in successfully", token });
   } catch (error) {
     response.status(500).json({ error: "Something went wrong during login" });

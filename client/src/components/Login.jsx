@@ -22,10 +22,19 @@ const Login = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await axios.post("http://localhost:7777/login", values);
-        navigate("/getUsers");
+        const response = await axios.post(
+          "http://localhost:7777/login",
+          values,
+          { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          navigate("/getUsers");
+        } else {
+          throw new Error("Login failed, please try again.");
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error during login:", error.response?.data || error);
       } finally {
         setSubmitting(false);
       }

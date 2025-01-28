@@ -26,8 +26,16 @@ const CreateUser = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await axios.post("http://localhost:7777/createUser", values);
-        navigate("/getUsers");
+        const response = await axios.post(
+          "http://localhost:7777/user/createUser",
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.status === 200) {
+          navigate("/getUsers");
+        }
       } catch (error) {
         console.log(error);
       } finally {

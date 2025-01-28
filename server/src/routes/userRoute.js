@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const { userAuth } = require("../middleware/auth");
 const userRouter = express.Router();
 
-userRouter.get("/getUsers", userAuth, async (request, response) => {
+userRouter.get("/user/getUsers", userAuth, async (request, response) => {
   try {
     const users = await UserModel.find({});
     response.json(users);
@@ -14,7 +14,7 @@ userRouter.get("/getUsers", userAuth, async (request, response) => {
   }
 });
 
-userRouter.get("/getUser/:id", userAuth, async (request, response) => {
+userRouter.get("/user/getUser/:id", userAuth, async (request, response) => {
   try {
     const user = await UserModel.findById(request.params.id);
     if (!user) {
@@ -26,7 +26,7 @@ userRouter.get("/getUser/:id", userAuth, async (request, response) => {
   }
 });
 
-userRouter.put("/updateUser/:id", userAuth, async (request, response) => {
+userRouter.put("/user/updateUser/:id", userAuth, async (request, response) => {
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       request.params.id,
@@ -39,7 +39,7 @@ userRouter.put("/updateUser/:id", userAuth, async (request, response) => {
   }
 });
 
-userRouter.delete("/deleteUser/:id", userAuth, async (request, response) => {
+userRouter.delete("/user/deleteUser/:id", userAuth, async (request, response) => {
   try {
     await UserModel.findByIdAndDelete(request.params.id);
     response.json({ message: "User deleted successfully" });
@@ -48,7 +48,7 @@ userRouter.delete("/deleteUser/:id", userAuth, async (request, response) => {
   }
 });
 
-userRouter.post("/createUser", userAuth, async (request, response) => {
+userRouter.post("/user/createUser", userAuth, async (request, response) => {
   try {
     const newUser = await UserModel.create(request.body);
     response.json(newUser);
