@@ -7,41 +7,47 @@ import * as Yup from "yup";
 const Register = () => {
   const navigate = useNavigate();
 
-  const formik = useFormik({
-    initialValues: {
-      username: "",
-      email: "",
-      age: "",
-      password: "",
-    },
-    validationSchema: Yup.object({
-      username: Yup.string().required("Username is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      age: Yup.number()
-        .positive("Age must be positive")
-        .integer("Age must be an integer")
-        .required("Age is required")
-        .typeError("Age must be a number"),
-      password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
-        .required("Password is required"),
-    }),
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:7777/register",
-          values
-        );
+  const initialValues = {
+    username: "",
+    email: "",
+    age: "",
+    password: "",
+  };
 
-        if (response.status === 201) {
-          navigate("/login");
-        }
-      } catch (error) {
-        console.error(error);
+  const validationSchema = Yup.object({
+    username: Yup.string().required("Username is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    age: Yup.number()
+      .positive("Age must be positive")
+      .integer("Age must be an integer")
+      .required("Age is required")
+      .typeError("Age must be a number"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:7777/register",
+        values
+      );
+
+      if (response.status === 201) {
+        navigate("/login");
       }
-    },
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: handleSubmit,
   });
 
   return (

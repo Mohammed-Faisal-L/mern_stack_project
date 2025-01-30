@@ -21,6 +21,24 @@ const UpdateUser = () => {
       .typeError("Age must be a number"),
   });
 
+  const handleSubmit = async (values) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:7777/user/updateUser/${id}`,
+        values,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        navigate("/getUsers");
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -46,23 +64,7 @@ const UpdateUser = () => {
   const formik = useFormik({
     initialValues: initialValues || { name: "", email: "", age: "" },
     validationSchema,
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.put(
-          `http://localhost:7777/user/updateUser/${id}`,
-          values,
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (response.status === 200) {
-          navigate("/getUsers");
-        }
-      } catch (error) {
-        console.error("Update failed:", error);
-      }
-    },
+    onSubmit: handleSubmit,
     enableReinitialize: true, // Ensures form updates when initialValues change
   });
 

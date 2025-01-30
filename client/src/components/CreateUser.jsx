@@ -7,39 +7,45 @@ import * as Yup from "yup";
 const CreateUser = () => {
   const navigate = useNavigate();
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      age: "",
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      age: Yup.number()
-        .positive("Age must be positive")
-        .integer("Age must be an integer")
-        .required("Age is required")
-        .typeError("Age must be a number"),
-    }),
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:7777/user/createUser",
-          values,
-          {
-            withCredentials: true,
-          }
-        );
-        if (response.status === 200) {
-          navigate("/getUsers");
+  const initialValues = {
+    name: "",
+    email: "",
+    age: "",
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    age: Yup.number()
+      .positive("Age must be positive")
+      .integer("Age must be an integer")
+      .required("Age is required")
+      .typeError("Age must be a number"),
+  });
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:7777/user/createUser",
+        values,
+        {
+          withCredentials: true,
         }
-      } catch (error) {
-        console.log(error);
+      );
+      if (response.status === 200) {
+        navigate("/getUsers");
       }
-    },
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: handleSubmit,
   });
 
   return (

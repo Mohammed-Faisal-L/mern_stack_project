@@ -7,36 +7,40 @@ import * as Yup from "yup";
 const Login = () => {
   const navigate = useNavigate();
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
-        .required("Password is required"),
-    }),
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:7777/login",
-          values,
-          { withCredentials: true }
-        );
+  const initialValues = {
+    email: "",
+    password: "",
+  };
 
-        if (response.status === 200) {
-          navigate("/getUsers");
-        } else {
-          throw new Error("Login failed, please try again.");
-        }
-      } catch (error) {
-        console.error("Error during login:", error.response?.data || error);
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await axios.post("http://localhost:7777/login", values, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        navigate("/getUsers");
+      } else {
+        throw new Error("Login failed, please try again.");
       }
-    },
+    } catch (error) {
+      console.error("Error during login:", error.response?.data || error);
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: handleSubmit,
   });
 
   return (
