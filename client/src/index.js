@@ -1,21 +1,44 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Users from "./components/Users";
-import CreateUser from "./components/CreateUser";
-import UpdateUser from "./components/UpdateUser";
+import Loading from "./components/Loading";
 import Login from "./components/Login";
 import Register from "./components/Register";
 
+const Users = lazy(() => import("./components/Users"));
+const CreateUser = lazy(() => import("./components/CreateUser"));
+const UpdateUser = lazy(() => import("./components/UpdateUser"));
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
-  { path: "/", element: <Register /> },
-  { path: "/login", element: <Login /> },
-  { path: "/getUsers", element: <Users /> },
-  { path: "/createUser", element: <CreateUser /> },
-  { path: "/updateUser/:id", element: <UpdateUser /> },
+  { path: "/", element: <Login /> },
+  { path: "/register", element: <Register /> },
+  {
+    path: "/getUsers",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Users />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/createUser",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <CreateUser />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/updateUser/:id",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <UpdateUser />
+      </Suspense>
+    ),
+  },
 ]);
 root.render(
   <React.StrictMode>

@@ -51,19 +51,19 @@ const Register = () => {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
       <form
         onSubmit={formik.handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
+        className="bg-white p-10 rounded-lg shadow-md w-full max-w-sm sm:max-w-md lg:max-w-lg"
       >
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6">
           Register
         </h2>
 
         <div className="mb-4">
           <label
             htmlFor="username"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-700 mb-2"
           >
             Username
           </label>
@@ -71,7 +71,7 @@ const Register = () => {
             type="text"
             id="username"
             name="username"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your username"
             value={formik.values.username}
             onChange={formik.handleChange}
@@ -87,7 +87,7 @@ const Register = () => {
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-700 mb-2"
           >
             Email
           </label>
@@ -95,7 +95,7 @@ const Register = () => {
             type="email"
             id="email"
             name="email"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your email"
             value={formik.values.email}
             onChange={formik.handleChange}
@@ -111,7 +111,7 @@ const Register = () => {
         <div className="mb-4">
           <label
             htmlFor="age"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-700 mb-2"
           >
             Age
           </label>
@@ -119,7 +119,7 @@ const Register = () => {
             type="number"
             id="age"
             name="age"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your age"
             value={formik.values.age}
             onChange={formik.handleChange}
@@ -133,7 +133,7 @@ const Register = () => {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-700 mb-2"
           >
             Password
           </label>
@@ -141,7 +141,7 @@ const Register = () => {
             type="password"
             id="password"
             name="password"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your password"
             value={formik.values.password}
             onChange={formik.handleChange}
@@ -157,17 +157,9 @@ const Register = () => {
         <button
           type="submit"
           disabled={formik.isSubmitting}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+          className="w-full bg-blue-500 text-white text-lg font-semibold py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {formik.isSubmitting ? "Submitting..." : "Register"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate("/login")}
-          className="w-full mt-4 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
-        >
-          Already Registered? Login
         </button>
       </form>
     </div>

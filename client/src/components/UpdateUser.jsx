@@ -65,7 +65,7 @@ const UpdateUser = () => {
     initialValues: initialValues || { name: "", email: "", age: "" },
     validationSchema,
     onSubmit: handleSubmit,
-    enableReinitialize: true, // Ensures form updates when initialValues change
+    enableReinitialize: true,
   });
 
   if (!initialValues) {
@@ -75,19 +75,19 @@ const UpdateUser = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
       <form
         onSubmit={formik.handleSubmit}
-        className="w-full max-w-md bg-white p-8 rounded-lg shadow-md"
+        className="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-white p-10 rounded-lg shadow-md"
       >
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-gray-800">
           Update User
         </h1>
 
         <div className="mb-4">
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-lg font-medium text-gray-700 mb-1"
           >
             Name
           </label>
@@ -95,7 +95,7 @@ const UpdateUser = () => {
             type="text"
             id="name"
             name="name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your name"
             {...formik.getFieldProps("name")}
           />
@@ -109,7 +109,7 @@ const UpdateUser = () => {
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-lg font-medium text-gray-700 mb-1"
           >
             Email
           </label>
@@ -117,7 +117,7 @@ const UpdateUser = () => {
             type="email"
             id="email"
             name="email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your email"
             {...formik.getFieldProps("email")}
           />
@@ -131,7 +131,7 @@ const UpdateUser = () => {
         <div className="mb-4">
           <label
             htmlFor="age"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-lg font-medium text-gray-700 mb-1"
           >
             Age
           </label>
@@ -139,7 +139,7 @@ const UpdateUser = () => {
             type="number"
             id="age"
             name="age"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
             placeholder="Enter your age"
             {...formik.getFieldProps("age")}
           />
@@ -151,7 +151,7 @@ const UpdateUser = () => {
         <button
           type="submit"
           disabled={formik.isSubmitting}
-          className="w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full bg-blue-500 text-white text-lg font-semibold py-3 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {formik.isSubmitting ? "Updating..." : "Update"}
         </button>

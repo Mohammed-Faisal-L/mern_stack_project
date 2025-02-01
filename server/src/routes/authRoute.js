@@ -31,4 +31,13 @@ authRoute.post("/login", async (request, response) => {
   }
 });
 
+authRoute.post("/logout", async (request, response) => {
+  try {
+    response.cookie("token", null);
+    response.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    response.status(500).json({ error: "Something went wrong during logout" });
+  }
+});
+
 module.exports = authRoute;
