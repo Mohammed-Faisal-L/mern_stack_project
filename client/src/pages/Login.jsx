@@ -108,6 +108,7 @@ const Login = () => {
           </button>
 
           <button
+            role="login"
             type="button"
             onClick={() => navigate("/register")}
             className="w-full mt-4 bg-gray-300 text-gray-700 text-lg font-semibold py-3 px-4 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"

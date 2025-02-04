@@ -4,12 +4,12 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Loading from "./components/Loading";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-const Users = lazy(() => import("./components/Users"));
-const CreateUser = lazy(() => import("./components/CreateUser"));
-const UpdateUser = lazy(() => import("./components/UpdateUser"));
+const Users = lazy(() => import("./pages/Users"));
+const CreateUser = lazy(() => import("./pages/CreateUser"));
+const UpdateUser = lazy(() => import("./pages/UpdateUser"));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([

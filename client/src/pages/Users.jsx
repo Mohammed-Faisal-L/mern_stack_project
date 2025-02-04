@@ -53,7 +53,10 @@ const Users = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
+    <div
+      role="users-container"
+      className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8"
+    >
       <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-6">
           <button
