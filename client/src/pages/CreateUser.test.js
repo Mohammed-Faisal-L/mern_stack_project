@@ -75,4 +75,30 @@ describe("CreateUser Component", () => {
       expect(mockedNavigate).not.toHaveBeenCalled();
     });
   });
+
+  it("navigates to /getUsers on successful user creation", async () => {
+    axios.post.mockResolvedValueOnce({ status: 200 });
+
+    render(
+      <MemoryRouter>
+        <CreateUser />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText(/name/i), {
+      target: { value: "John Doe" },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: "john@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText(/age/i), {
+      target: { value: "30" },
+    });
+
+    fireEvent.click(screen.getByRole("create"));
+
+    await waitFor(() => {
+      expect(mockedNavigate).toHaveBeenCalledWith("/getUsers");
+    });
+  });
 });

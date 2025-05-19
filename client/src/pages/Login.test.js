@@ -21,7 +21,7 @@ describe("Login Component", () => {
     jest.clearAllMocks();
   });
 
-  test("shows validation errors when submitting empty form", async () => {
+  it("shows validation errors when submitting empty form", async () => {
     render(
       <MemoryRouter>
         <Login />
@@ -34,7 +34,7 @@ describe("Login Component", () => {
     expect(screen.getByText(/password is required/i)).toBeInTheDocument();
   });
 
-  test("shows validation errors on invalid email and short password", async () => {
+  it("shows validation errors on invalid email and short password", async () => {
     render(
       <MemoryRouter>
         <Login />
@@ -60,7 +60,7 @@ describe("Login Component", () => {
     ).toBeInTheDocument();
   });
 
-  test("successful login triggers navigation", async () => {
+  it("successful login triggers navigation", async () => {
     axios.post.mockResolvedValue({ status: 200 });
 
     render(
@@ -91,7 +91,7 @@ describe("Login Component", () => {
     });
   });
 
-  test("login failure with non-200 status does not navigate", async () => {
+  it("login failure with non-200 status does not navigate", async () => {
     axios.post.mockResolvedValue({ status: 401 });
 
     render(
@@ -114,7 +114,7 @@ describe("Login Component", () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
   });
 
-  test("logs error on axios failure", async () => {
+  it("logs error on axios failure", async () => {
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});

@@ -21,7 +21,7 @@ describe("Users Component", () => {
     jest.clearAllMocks();
   });
 
-  test("fetches and displays users", async () => {
+  it("fetches and displays users", async () => {
     axios.get.mockResolvedValue({
       data: [
         { _id: "1", name: "Alice", email: "alice@example.com", age: 25 },
@@ -47,7 +47,7 @@ describe("Users Component", () => {
     expect(screen.getByText("Bob")).toBeInTheDocument();
   });
 
-  test("clicking Add + navigates to /createUser", async () => {
+  it("clicking Add + navigates to /createUser", async () => {
     axios.get.mockResolvedValue({ data: [] });
 
     render(
@@ -62,7 +62,7 @@ describe("Users Component", () => {
     expect(mockedNavigate).toHaveBeenCalledWith("/createUser");
   });
 
-  test("clicking Edit navigates to updateUser page", async () => {
+  it("clicking Edit navigates to updateUser page", async () => {
     axios.get.mockResolvedValue({
       data: [{ _id: "1", name: "Alice", email: "alice@example.com", age: 25 }],
     });
@@ -79,7 +79,7 @@ describe("Users Component", () => {
     expect(mockedNavigate).toHaveBeenCalledWith("/updateUser/1");
   });
 
-  test("clicking Delete calls delete API and refreshes list", async () => {
+  it("clicking Delete calls delete API and refreshes list", async () => {
     axios.get.mockResolvedValueOnce({
       data: [{ _id: "1", name: "Alice", email: "alice@example.com", age: 25 }],
     });
@@ -109,7 +109,7 @@ describe("Users Component", () => {
     });
   });
 
-  test("logs error if fetching users fails", async () => {
+  it("logs error if fetching users fails", async () => {
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
@@ -132,7 +132,7 @@ describe("Users Component", () => {
     consoleSpy.mockRestore();
   });
 
-  test("logs error if deleting user fails", async () => {
+  it("logs error if deleting user fails", async () => {
     axios.get.mockResolvedValue({
       data: [{ _id: "1", name: "Alice", email: "alice@example.com", age: 25 }],
     });
@@ -161,7 +161,7 @@ describe("Users Component", () => {
     consoleSpy.mockRestore();
   });
 
-  test("logs error if logout fails", async () => {
+  it("logs error if logout fails", async () => {
     axios.get.mockResolvedValue({ data: [] });
 
     const consoleSpy = jest

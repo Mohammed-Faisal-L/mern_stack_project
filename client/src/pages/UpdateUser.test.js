@@ -120,10 +120,11 @@ describe("UpdateUser Component", () => {
     consoleSpy.mockRestore();
   });
 
-  it("handles error during update", async () => {
+  it("logs error if update API call fails", async () => {
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
+
     axios.get.mockResolvedValueOnce({
       data: { name: "Jane", email: "jane@example.com", age: 25 },
     });
@@ -136,14 +137,16 @@ describe("UpdateUser Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole("update"));
+    expect(await screen.findByDisplayValue("Jane")).toBeInTheDocument();
 
-    await waitFor(() =>
-      expect(consoleSpy).not.toHaveBeenCalledWith(
+    fireEvent.click(screen.getByRole("update"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
         "Update failed:",
         expect.any(Error)
-      )
-    );
+      );
+    });
 
     consoleSpy.mockRestore();
   });

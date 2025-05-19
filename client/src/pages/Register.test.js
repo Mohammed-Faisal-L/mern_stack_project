@@ -80,4 +80,30 @@ describe("Register Component", () => {
       expect(mockedNavigate).not.toHaveBeenCalled();
     });
   });
+
+  it("navigates to '/' on successful registration", async () => {
+    axios.post.mockResolvedValueOnce({ status: 201 });
+    render(
+      <MemoryRouter>
+        <Register />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "user" },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: "user@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText(/age/i), {
+      target: { value: "30" },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: "password" },
+    });
+
+    fireEvent.click(screen.getByRole("register"));
+
+    await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith("/"));
+  });
 });
