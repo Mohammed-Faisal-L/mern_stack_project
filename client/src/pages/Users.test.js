@@ -86,7 +86,6 @@ describe("Users Component", () => {
 
     axios.delete.mockResolvedValue({ status: 200 });
 
-    // Second fetch after deletion returns empty list
     axios.get.mockResolvedValueOnce({ data: [] });
 
     render(
@@ -190,7 +189,7 @@ describe("Users Component", () => {
   });
 
   it("navigates to '/' on successful logout", async () => {
-    axios.post.mockResolvedValueOnce({ status: 200 }); // for logout
+    axios.post.mockResolvedValueOnce({ status: 200 });
 
     render(
       <MemoryRouter>
@@ -203,6 +202,23 @@ describe("Users Component", () => {
 
     await waitFor(() => {
       expect(mockedNavigate).toHaveBeenCalledWith("/");
+    });
+  });
+
+  it("does NOT navigate on logout failure (status !== 200)", async () => {
+    axios.post.mockResolvedValueOnce({ status: 500 });
+
+    render(
+      <MemoryRouter>
+        <Users />
+      </MemoryRouter>
+    );
+
+    const logoutButton = screen.getByText("Logout");
+    fireEvent.click(logoutButton);
+
+    await waitFor(() => {
+      expect(mockedNavigate).not.toHaveBeenCalled();
     });
   });
 });

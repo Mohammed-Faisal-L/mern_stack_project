@@ -154,9 +154,9 @@ describe("Login Component", () => {
       </MemoryRouter>
     );
 
-    const registerButton = screen.getByRole("login");
+    const loginButton = screen.getByRole("login");
 
-    fireEvent.click(registerButton);
+    fireEvent.click(loginButton);
 
     expect(mockedNavigate).toHaveBeenCalledWith("/register");
   });
