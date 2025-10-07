@@ -1,56 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useFormik } from "formik";
-import { registerSchema } from "../schemas/registerSchema";
-import {
-  PLACEHOLDERS,
-  TEXTS,
-  TOAST_MESSAGES,
-} from "../constants/text-constants";
-import { USER_API } from "../constants/api-constants";
-import { ROUTES } from "../constants/route-constants";
-import { toast } from "react-toastify";
+import { PLACEHOLDERS, TEXTS } from "../constants/text-constants";
 import Header from "../common/Header";
 import Button from "../common/Button";
 import FormInput from "../common/FormInput";
+import { useRegister } from "../hooks/useRegister";
 
 const Register = () => {
-  const navigate = useNavigate();
-
-  const initialValues = {
-    username: "",
-    email: "",
-    age: "",
-    password: "",
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      const response = await axios.post(USER_API.REGISTER, values);
-
-      if (response.status === 201) {
-        toast.success(TOAST_MESSAGES.REGISTER_SUCCESS);
-        formik.resetForm();
-        navigate(ROUTES.HOME);
-      } else {
-        toast.error(TOAST_MESSAGES.REGISTER_ERROR);
-      }
-    } catch (error) {
-      console.error(
-        TOAST_MESSAGES.REGISTER_ERROR,
-        error.response?.data || error
-      );
-      toast.error(
-        error.response?.data?.message || TOAST_MESSAGES.REGISTER_ERROR
-      );
-    }
-  };
-
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: registerSchema,
-    onSubmit: handleSubmit,
-  });
+  const { formik } = useRegister();
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">

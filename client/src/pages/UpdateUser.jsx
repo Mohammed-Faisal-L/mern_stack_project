@@ -1,85 +1,11 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useFormik } from "formik";
-import { updateUserSchema } from "../schemas/updateUserSchema";
-import {
-  PLACEHOLDERS,
-  TEXTS,
-  TOAST_MESSAGES,
-} from "../constants/text-constants";
-import { USER_API } from "../constants/api-constants";
-import { ROUTES } from "../constants/route-constants";
-import { toast } from "react-toastify";
+import { PLACEHOLDERS, TEXTS } from "../constants/text-constants";
 import Header from "../common/Header";
 import Button from "../common/Button";
 import FormInput from "../common/FormInput";
+import { useUpdateUser } from "../hooks/useUpdateUser";
 
 const UpdateUser = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [initialValues, setInitialValues] = useState(null);
-
-  const handleSubmit = async (values) => {
-    toast
-      .promise(
-        axios.put(USER_API.UPDATE(id), values, { withCredentials: true }),
-        {
-          pending: {
-            render: TEXTS.UPDATTING,
-            autoClose: 2000,
-          },
-          success: {
-            render: TOAST_MESSAGES.USER_UPDATE_SUCCESS,
-            autoClose: 2000,
-          },
-          error: {
-            render: (err) =>
-              err.response?.data?.message || TOAST_MESSAGES.USER_UPDATE_ERROR,
-            autoClose: 2000,
-          },
-        }
-      )
-      .then(() => {
-        formik.resetForm();
-        navigate(ROUTES.GET);
-      })
-      .catch((err) => {
-        toast.error(TOAST_MESSAGES.USER_UPDATE_ERROR);
-      });
-  };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await axios.get(USER_API.GET_ONE(id), {
-          withCredentials: true,
-        });
-
-        if (data) {
-          setInitialValues({
-            name: data.name,
-            email: data.email,
-            age: data.age,
-          });
-        }
-      } catch (error) {
-        toast.error(TOAST_MESSAGES.USER_FETCH_ERROR);
-      }
-    };
-    fetchUser();
-  }, [id]);
-
-  const formik = useFormik({
-    initialValues: initialValues || { name: "", email: "", age: "" },
-    updateUserSchema,
-    onSubmit: handleSubmit,
-    enableReinitialize: true,
-  });
-
-  if (!initialValues) {
-    return <p className="text-center text-gray-500 mt-10">{TEXTS.LOADING}</p>;
-  }
+  const { formik } = useUpdateUser();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
