@@ -18,7 +18,7 @@ authRoute.post("/login", async (request, response) => {
       return response.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user._id }, "Akash@123");
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
     response.cookie("token", token, {
       httpOnly: true,

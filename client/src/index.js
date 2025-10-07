@@ -3,20 +3,22 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Loading from "./components/Loading";
+import Loading from "./common/Loading";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { ROUTES } from "./constants/route-constants";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Users = lazy(() => import("./pages/Users"));
 const CreateUser = lazy(() => import("./pages/CreateUser"));
 const UpdateUser = lazy(() => import("./pages/UpdateUser"));
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
-  { path: "/", element: <Login /> },
-  { path: "/register", element: <Register /> },
+  { path: ROUTES.HOME, element: <Login /> },
+  { path: ROUTES.REGISTER, element: <Register /> },
   {
-    path: "/getUsers",
+    path: ROUTES.GET,
     element: (
       <Suspense fallback={<Loading />}>
         <Users />
@@ -24,7 +26,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/createUser",
+    path: ROUTES.CREATE,
     element: (
       <Suspense fallback={<Loading />}>
         <CreateUser />
@@ -32,7 +34,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/updateUser/:id",
+    path: ROUTES.UPDATE,
     element: (
       <Suspense fallback={<Loading />}>
         <UpdateUser />
@@ -40,13 +42,22 @@ const router = createBrowserRouter([
     ),
   },
 ]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop
+      closeOnClick
+      pauseOnHover
+      theme="colored"
+    />
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

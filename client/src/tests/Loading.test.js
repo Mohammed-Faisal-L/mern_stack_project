@@ -1,6 +1,5 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import Loading from "../components/Loading";
+import Loading from "../common/Loading";
 
 describe("Loading Component", () => {
   it("should render the loading spinner in the document", () => {

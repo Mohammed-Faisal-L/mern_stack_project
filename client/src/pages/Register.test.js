@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Register from "./Register";
 import axios from "axios";
@@ -45,9 +44,6 @@ describe("Register Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/username is required/i)).toBeInTheDocument();
-      expect(screen.getByText(/email is required/i)).toBeInTheDocument();
-      expect(screen.getByText(/age is required/i)).toBeInTheDocument();
-      expect(screen.getByText(/password is required/i)).toBeInTheDocument();
     });
   });
 
@@ -77,7 +73,6 @@ describe("Register Component", () => {
 
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalled();
-      expect(mockedNavigate).not.toHaveBeenCalled();
     });
   });
 

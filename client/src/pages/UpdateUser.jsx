@@ -1,51 +1,60 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { updateUserSchema } from "../schemas/updateUserSchema";
+import {
+  PLACEHOLDERS,
+  TEXTS,
+  TOAST_MESSAGES,
+} from "../constants/text-constants";
+import { USER_API } from "../constants/api-constants";
+import { ROUTES } from "../constants/route-constants";
+import { toast } from "react-toastify";
+import Header from "../common/Header";
+import Button from "../common/Button";
+import FormInput from "../common/FormInput";
 
 const UpdateUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState(null);
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    age: Yup.number()
-      .positive("Age must be positive")
-      .integer("Age must be an integer")
-      .required("Age is required")
-      .typeError("Age must be a number"),
-  });
-
   const handleSubmit = async (values) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:7777/user/updateUser/${id}`,
-        values,
+    toast
+      .promise(
+        axios.put(USER_API.UPDATE(id), values, { withCredentials: true }),
         {
-          withCredentials: true,
+          pending: {
+            render: TEXTS.UPDATTING,
+            autoClose: 2000,
+          },
+          success: {
+            render: TOAST_MESSAGES.USER_UPDATE_SUCCESS,
+            autoClose: 2000,
+          },
+          error: {
+            render: (err) =>
+              err.response?.data?.message || TOAST_MESSAGES.USER_UPDATE_ERROR,
+            autoClose: 2000,
+          },
         }
-      );
-
-      if (response.status === 200) {
-        navigate("/getUsers");
-      }
-    } catch (error) {
-      console.error("Update failed:", error);
-    }
+      )
+      .then(() => {
+        formik.resetForm();
+        navigate(ROUTES.GET);
+      })
+      .catch((err) => {
+        toast.error(TOAST_MESSAGES.USER_UPDATE_ERROR);
+      });
   };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(
-          `http://localhost:7777/user/getUser/${id}`,
-          { withCredentials: true }
-        );
+        const { data } = await axios.get(USER_API.GET_ONE(id), {
+          withCredentials: true,
+        });
 
         if (data) {
           setInitialValues({
@@ -55,7 +64,7 @@ const UpdateUser = () => {
           });
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        toast.error(TOAST_MESSAGES.USER_FETCH_ERROR);
       }
     };
     fetchUser();
@@ -63,15 +72,13 @@ const UpdateUser = () => {
 
   const formik = useFormik({
     initialValues: initialValues || { name: "", email: "", age: "" },
-    validationSchema,
+    updateUserSchema,
     onSubmit: handleSubmit,
     enableReinitialize: true,
   });
 
   if (!initialValues) {
-    return (
-      <p className="text-center text-gray-500 mt-10">Loading user details...</p>
-    );
+    return <p className="text-center text-gray-500 mt-10">{TEXTS.LOADING}</p>;
   }
 
   return (
@@ -80,82 +87,45 @@ const UpdateUser = () => {
         onSubmit={formik.handleSubmit}
         className="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-white p-10 rounded-lg shadow-md"
       >
-        <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-gray-800">
-          Update User
-        </h1>
+        <Header text={TEXTS.UPDATE_USER} />
 
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-lg font-medium text-gray-700 mb-1"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            placeholder="Enter your name"
-            {...formik.getFieldProps("name")}
-          />
-          {formik.touched.name && formik.errors.name && (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.name}
-            </div>
-          )}
-        </div>
+        <FormInput
+          label={TEXTS.NAME}
+          id="name"
+          name="name"
+          type="text"
+          placeholder={PLACEHOLDERS.NAME}
+          formik={formik}
+        />
 
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-lg font-medium text-gray-700 mb-1"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            placeholder="Enter your email"
-            {...formik.getFieldProps("email")}
-          />
-          {formik.touched.email && formik.errors.email && (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.email}
-            </div>
-          )}
-        </div>
+        <FormInput
+          label={TEXTS.EMAIL}
+          id="email"
+          name="email"
+          type="email"
+          placeholder={PLACEHOLDERS.EMAIL}
+          formik={formik}
+        />
 
-        <div className="mb-4">
-          <label
-            htmlFor="age"
-            className="block text-lg font-medium text-gray-700 mb-1"
-          >
-            Age
-          </label>
-          <input
-            type="number"
-            id="age"
-            name="age"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            placeholder="Enter your age"
-            {...formik.getFieldProps("age")}
-          />
-          {formik.touched.age && formik.errors.age && (
-            <div className="text-red-500 text-sm mt-1">{formik.errors.age}</div>
-          )}
-        </div>
+        <FormInput
+          label={TEXTS.AGE}
+          id="age"
+          name="age"
+          type="number"
+          placeholder={PLACEHOLDERS.AGE}
+          formik={formik}
+        />
 
-        <button
+        <Button
           role="update"
           type="submit"
-          disabled={formik.isSubmitting}
-          className="w-full bg-blue-500 text-white text-lg font-semibold py-3 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          {formik.isSubmitting ? "Updating..." : "Update"}
-        </button>
+          isLoading={formik.isSubmitting}
+          text={TEXTS.UPDATE}
+          loadingText={TEXTS.UPDATTING}
+          variant="primary"
+          size="lg"
+          fullWidth
+        />
       </form>
     </div>
   );

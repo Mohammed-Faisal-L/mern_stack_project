@@ -6,7 +6,7 @@ const userAuth =
   async (request, response, next) => {
     try {
       const cookies = request.cookies;
-      const userId = await jwt.verify(cookies.token, "Akash@123");
+      const userId = await jwt.verify(cookies.token, process.env.JWT_SECRET);
       if (!userId) {
         throw new Error("invalid credentials...");
       } else {

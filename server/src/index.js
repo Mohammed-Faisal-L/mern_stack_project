@@ -1,3 +1,4 @@
+require("dotenv").config({ path: __dirname + "/../.env" });
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -24,7 +25,7 @@ server.use("/", userAuth);
 dbConnect()
   .then(() => {
     console.log("connection to the database is success...");
-    server.listen(7777, () => {
+    server.listen(process.env.PORT, () => {
       console.log("server running on port 7777...");
     });
   })

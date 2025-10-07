@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 
-const url =
-  "mongodb+srv://mdfaisala334:wQCchGk0SnkBEKaI@newcluster.h4rvp.mongodb.net/practiceCRUD";
-
 const dbConnect = async () => {
-  await mongoose.connect(url);
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("Connected to MongoDB successfully");
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
+  }
 };
 
 module.exports = { dbConnect };

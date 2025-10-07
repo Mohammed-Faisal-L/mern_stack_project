@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { TEXTS, TOAST_MESSAGES } from "../constants/text-constants";
+import { USER_API } from "../constants/api-constants";
+import { ROUTES } from "../constants/route-constants";
+import { toast } from "react-toastify";
+import Button from "../common/Button";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -8,14 +13,23 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:7777/user/getUsers", {
+      const response = await axios.get(USER_API.GET_ALL, {
         withCredentials: true,
       });
-      if (response) {
+
+      if (response.status === 200) {
         setUsers(response.data);
+      } else {
+        toast.error(TOAST_MESSAGES.USERS_FETCH_ERROR);
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error(
+        TOAST_MESSAGES.USERS_FETCH_ERROR,
+        error.response?.data || error
+      );
+      toast.error(
+        error.response?.data?.message || TOAST_MESSAGES.USERS_FETCH_ERROR
+      );
     }
   };
 
@@ -25,30 +39,41 @@ const Users = () => {
 
   const deleteUser = async (id) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:7777/user/deleteUser/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(USER_API.DELETE(id), {
+        withCredentials: true,
+      });
+
       if (response.status === 200) {
+        toast.success(TOAST_MESSAGES.USER_DELETE_SUCCESS);
         fetchUsers();
+      } else {
+        toast.error(TOAST_MESSAGES.USER_DELETE_ERROR);
       }
     } catch (error) {
-      console.error("Error deleting user:", error);
+      console.error(
+        TOAST_MESSAGES.USER_DELETE_ERROR,
+        error.response?.data || error
+      );
+      toast.error(
+        error.response?.data?.message || TOAST_MESSAGES.USER_DELETE_ERROR
+      );
     }
   };
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post("http://localhost:7777/logout", {
+      const response = await axios.post(USER_API.LOGOUT, {
         withCredentials: true,
       });
       if (response.status === 200) {
-        navigate("/");
+        toast.success(TOAST_MESSAGES.LOGOUT_SUCCESS);
+        navigate(ROUTES.HOME);
+      } else {
+        toast.error(TOAST_MESSAGES.LOGIN_ERROR);
       }
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error(TOAST_MESSAGES.LOGIN_ERROR, error.response?.data || error);
+      toast.error(error.response?.data?.message || TOAST_MESSAGES.LOGIN_ERROR);
     }
   };
 
@@ -59,18 +84,20 @@ const Users = () => {
     >
       <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-6">
-          <button
-            onClick={() => navigate("/createUser")}
-            className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600"
-          >
-            Add +
-          </button>
-          <button
+          <Button
+            onClick={() => navigate(ROUTES.CREATE)}
+            text={TEXTS.ADD}
+            variant="primary"
+            size="sm"
+            fullWidth={false}
+          />
+          <Button
             onClick={handleLogout}
-            className="bg-red-500 text-white font-medium py-2 px-4 rounded-md hover:bg-red-600"
-          >
-            Logout
-          </button>
+            text={TEXTS.LOGOUT}
+            variant="danger"
+            size="sm"
+            fullWidth={false}
+          />{" "}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -82,21 +109,29 @@ const Users = () => {
               <h2 className="text-xl font-semibold text-gray-800">
                 {user.name}
               </h2>
-              <p className="text-gray-600">Email: {user.email}</p>
-              <p className="text-gray-600">Age: {user.age}</p>
+              <p className="text-gray-600">
+                {TEXTS.EMAIL}: {user.email}
+              </p>
+              <p className="text-gray-600">
+                {TEXTS.AGE}: {user.age}
+              </p>
               <div className="flex justify-between mt-4">
-                <button
-                  onClick={() => navigate(`/updateUser/${user._id}`)}
-                  className="bg-green-500 text-white py-1 px-3 rounded-md hover:bg-green-600"
-                >
-                  Edit
-                </button>
-                <button
+                <Button
+                  onClick={() => navigate(ROUTES.UPDATES(user._id))}
+                  text={TEXTS.EDIT}
+                  variant="success"
+                  size="sm"
+                  fullWidth={false}
+                  rounded="md"
+                />
+                <Button
                   onClick={() => deleteUser(user._id)}
-                  className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600"
-                >
-                  Delete
-                </button>
+                  text={TEXTS.DELETE}
+                  variant="danger"
+                  size="sm"
+                  fullWidth={false}
+                  rounded="md"
+                />
               </div>
             </div>
           ))}

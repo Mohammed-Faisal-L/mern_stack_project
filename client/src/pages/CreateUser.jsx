@@ -1,8 +1,18 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { createUserSchema } from "../schemas/createUserSchema";
+import {
+  PLACEHOLDERS,
+  TEXTS,
+  TOAST_MESSAGES,
+} from "../constants/text-constants";
+import { USER_API } from "../constants/api-constants";
+import { ROUTES } from "../constants/route-constants";
+import { toast } from "react-toastify";
+import Header from "../common/Header";
+import Button from "../common/Button";
+import FormInput from "../common/FormInput";
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -13,128 +23,71 @@ const CreateUser = () => {
     age: "",
   };
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    age: Yup.number()
-      .positive("Age must be positive")
-      .integer("Age must be an integer")
-      .required("Age is required")
-      .typeError("Age must be a number"),
-  });
-
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post(
-        "http://localhost:7777/user/createUser",
-        values,
-        { withCredentials: true }
-      );
+      const response = await axios.post(USER_API.CREATE, values, {
+        withCredentials: true,
+      });
       if (response.status === 200) {
-        navigate("/getUsers");
+        toast.success(TOAST_MESSAGES.USER_CREATE_SUCCESS);
+        formik.resetForm();
+        navigate(ROUTES.GET);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(TOAST_MESSAGES.USER_CREATE_ERROR);
     }
   };
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
+    createUserSchema,
     onSubmit: handleSubmit,
   });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-lg md:max-w-md lg:max-w-lg xl:max-w-xl bg-white p-6 sm:p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-gray-800">
-          Create User
-        </h1>
+        <Header text={TEXTS.CREATE_USER} />
 
         <form onSubmit={formik.handleSubmit} className="space-y-5">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-              placeholder="Enter your name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.name && formik.errors.name && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.name}
-              </div>
-            )}
-          </div>
+          <FormInput
+            label={TEXTS.NAME}
+            id="name"
+            name="name"
+            type="text"
+            placeholder={PLACEHOLDERS.NAME}
+            formik={formik}
+          />
+
+          <FormInput
+            label={TEXTS.EMAIL}
+            id="email"
+            name="email"
+            type="email"
+            placeholder={PLACEHOLDERS.EMAIL}
+            formik={formik}
+          />
+
+          <FormInput
+            label={TEXTS.AGE}
+            id="age"
+            name="age"
+            type="number"
+            placeholder={PLACEHOLDERS.AGE}
+            formik={formik}
+          />
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-              placeholder="Enter your email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.email}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="age"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Age
-            </label>
-            <input
-              type="number"
-              id="age"
-              name="age"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-              placeholder="Enter your age"
-              value={formik.values.age}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.age && formik.errors.age && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.age}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <button
+            <Button
               role="create"
               type="submit"
-              disabled={formik.isSubmitting}
-              className="w-full bg-blue-500 text-white text-lg font-semibold py-3 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              {formik.isSubmitting ? "Submitting..." : "Create User"}
-            </button>
+              isLoading={formik.isSubmitting}
+              text={TEXTS.CREATE_USER}
+              loadingText={TEXTS.SUBMITTING}
+              variant="primary"
+              size="lg"
+              fullWidth
+            />
           </div>
         </form>
       </div>
