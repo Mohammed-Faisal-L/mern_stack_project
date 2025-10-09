@@ -6,29 +6,30 @@ const { dbConnect } = require("./config/mongoseConnection");
 const userRouter = require("./routes/userRoute");
 const authRoute = require("./routes/authRoute");
 const { userAuth } = require("./middleware/auth");
+const { MESSAGES } = require("./constants/message-constants");
+const { USER_ROUTES } = require("./constants/route-constants");
 
 const server = express();
 
 server.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
 server.use(express.json());
 server.use(cookieParser());
 
-server.use("/", userRouter);
-server.use("/", authRoute);
-server.use("/", userAuth);
+server.use(USER_ROUTES.HOME, userRouter);
+server.use(USER_ROUTES.HOME, authRoute);
+server.use(USER_ROUTES.HOME, userAuth);
 
 dbConnect()
   .then(() => {
-    console.log("connection to the database is success...");
     server.listen(process.env.PORT, () => {
-      console.log("server running on port 7777...");
+      console.log(MESSAGES.SERVER_RUNNING(process.env.PORT));
     });
   })
   .catch((error) => {
-    console.log(error, " error in the connection...");
+    console.log(error, MESSAGES.DB_CONNECTION_FAILED);
   });

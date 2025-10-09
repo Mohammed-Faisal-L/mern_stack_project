@@ -3,65 +3,92 @@ const UserModel = require("../models/User");
 const UserNameModel = require("../models/UserName");
 const bcrypt = require("bcrypt");
 const { userAuth } = require("../middleware/auth");
+const { USER_ROUTES } = require("../constants/route-constants");
+const { USER_MESSAGES } = require("../constants/message-constants");
+const { STATUS_CODES } = require("../constants/status-constants");
 const userRouter = express.Router();
 
-userRouter.get("/user/getUsers", userAuth, async (request, response) => {
+userRouter.get(USER_ROUTES.GET_USERS, userAuth, async (request, response) => {
   try {
     const users = await UserModel.find({});
     response.json(users);
   } catch (error) {
-    response.status(500).json({ error: "Error fetching users" });
+    response
+      .status(STATUS_CODES.SERVER_ERROR)
+      .json({ error: USER_MESSAGES.FETCH_ERROR || error.message });
   }
 });
 
-userRouter.get("/user/getUser/:id", userAuth, async (request, response) => {
-  try {
-    const user = await UserModel.findById(request.params.id);
-    if (!user) {
-      return response.status(404).json({ error: "User not found" });
-    }
-    response.json(user);
-  } catch (error) {
-    response.status(500).json({ error: "Error fetching user" });
-  }
-});
-
-userRouter.put("/user/updateUser/:id", userAuth, async (request, response) => {
-  try {
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      request.params.id,
-      request.body,
-      { new: true }
-    );
-    response.json(updatedUser);
-  } catch (error) {
-    response.status(500).json({ error: "Error updating user" });
-  }
-});
-
-userRouter.delete(
-  "/user/deleteUser/:id",
+userRouter.get(
+  USER_ROUTES.GET_USER_BY_ID,
   userAuth,
   async (request, response) => {
     try {
-      await UserModel.findByIdAndDelete(request.params.id);
-      response.json({ message: "User deleted successfully" });
+      const user = await UserModel.findById(request.params.id);
+      if (!user) {
+        return response
+          .status(STATUS_CODES.NOT_FOUND)
+          .json({ error: USER_MESSAGES.NOT_FOUND });
+      }
+      response.json(user);
     } catch (error) {
-      response.status(500).json({ error: "Error deleting user" });
+      response
+        .status(STATUS_CODES.SERVER_ERROR)
+        .json({ error: USER_MESSAGES.FETCH_ONE_ERROR || error.message });
     }
   }
 );
 
-userRouter.post("/user/createUser", userAuth, async (request, response) => {
-  try {
-    const newUser = await UserModel.create(request.body);
-    response.json(newUser);
-  } catch (error) {
-    response.status(500).json({ error: "Error creating user" });
+userRouter.put(
+  USER_ROUTES.UPDATE_USER_BY_ID,
+  userAuth,
+  async (request, response) => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        request.params.id,
+        request.body,
+        { new: true }
+      );
+      response.json(updatedUser);
+    } catch (error) {
+      response
+        .status(STATUS_CODES.SERVER_ERROR)
+        .json({ error: USER_MESSAGES.UPDATE_ERROR || error.message });
+    }
   }
-});
+);
 
-userRouter.post("/register", async (request, response) => {
+userRouter.delete(
+  USER_ROUTES.DELETE_USER_BY_ID,
+  userAuth,
+  async (request, response) => {
+    try {
+      await UserModel.findByIdAndDelete(request.params.id);
+      response.json({ message: USER_MESSAGES.DELETE_SUCCESS });
+    } catch (error) {
+      response
+        .status(STATUS_CODES.SERVER_ERROR)
+        .json({ error: USER_MESSAGES.DELETE_ERROR || error.message });
+    }
+  }
+);
+
+userRouter.post(
+  USER_ROUTES.CREATE_USER,
+  userAuth,
+  async (request, response) => {
+    try {
+      const newUser = await UserModel.create(request.body);
+      response.json(newUser);
+    } catch (error) {
+      response
+        .status(STATUS_CODES.SERVER_ERROR)
+        .json({ error: USER_MESSAGES.CREATE_ERROR || error });
+    }
+  }
+);
+
+userRouter.post(USER_ROUTES.REGISTER, async (request, response) => {
   try {
     const { username, email, age, password } = request.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,9 +101,13 @@ userRouter.post("/register", async (request, response) => {
     });
 
     await userData.save();
-    response.status(201).json({ message: "User registered successfully" });
+    response
+      .status(STATUS_CODES.CREATED)
+      .json({ message: USER_MESSAGES.REGISTER_SUCCESS });
   } catch (error) {
-    response.status(500).json({ error: "Error registering user" });
+    response
+      .status(STATUS_CODES.SERVER_ERROR)
+      .json({ error: USER_MESSAGES.REGISTER_ERROR || error.message });
   }
 });
 

@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+const { MESSAGES } = require("../constants/message-constants");
 
 const dbConnect = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL);
-    console.log("Connected to MongoDB successfully");
+    console.log(MESSAGES.DB_CONNECTED);
   } catch (error) {
-    console.error("MongoDB connection failed:", error.message);
+    console.error(MESSAGES.DB_CONNECTION_FAILED, error.message);
     process.exit(1);
   }
 };
