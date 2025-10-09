@@ -1,4 +1,4 @@
-import { TEXTS } from "../constants/text-constants";
+import { ROLES, TEXTS } from "../constants/text-constants";
 import { ROUTES } from "../constants/route-constants";
 import Button from "../common/Button";
 import { useUsers } from "../hooks/useUsers";
@@ -9,12 +9,13 @@ const Users = () => {
 
   return (
     <div
-      role="users-container"
+      data-testid="users-container"
       className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8"
     >
       <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-6">
           <Button
+            role={ROLES.ADD_USER_BUTTON}
             onClick={() => navigate(ROUTES.CREATE)}
             text={TEXTS.ADD}
             variant="primary"
@@ -22,6 +23,7 @@ const Users = () => {
             fullWidth={false}
           />
           <Button
+            role={ROLES.LOGOUT_BUTTON}
             onClick={handleLogout}
             text={TEXTS.LOGOUT}
             variant="danger"

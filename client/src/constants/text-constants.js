@@ -57,3 +57,33 @@ export const TOAST_MESSAGES = {
   USER_FETCH_ERROR: "Unable to load user. Please refresh.",
   USERS_FETCH_ERROR: "Unable to load users. Please refresh.",
 };
+
+export const ROLES = {
+  APP: "app",
+  STATUS: "status",
+  LOGIN_BUTTON: "login",
+  REGISTER_BUTTON: "register",
+  NO_ACCOUNT_BUTTON: "noaccount",
+  ADD_USER_BUTTON: "add",
+  LOGOUT_BUTTON: "logout",
+  EDIT_USER_BUTTON: "edit",
+  DELETE_USER_BUTTON: "delete",
+  CREATE_USER_BUTTON: "create",
+  UPDATE_USER_BUTTON: "update",
+};
+
+export const TEST_IDS = {
+  USERS_CONTAINER: "users-container",
+  EDIT_BUTTON: (id) => `edit-button-${id}`,
+  DELETE_BUTTON: (id) => `delete-button-${id}`,
+  EDIT_REGEX: /edit-button-/,
+  DELETE_REGEX: /delete-button-/,
+};
+
+export const ERROR = {
+  API: "API failed",
+  NETWORK: "Network error",
+  EMAIL: "Email already exists",
+  FETCH: "Fetch Error",
+  LOGOUT: "Logout Error",
+};

@@ -1,7 +1,7 @@
 import Header from "../common/Header";
 import Button from "../common/Button";
 import FormInput from "../common/FormInput";
-import { TEXTS, PLACEHOLDERS } from "../constants/text-constants";
+import { TEXTS, PLACEHOLDERS, ROLES } from "../constants/text-constants";
 import { useCreateUser } from "../hooks/useCreateUser";
 
 const CreateUser = () => {
@@ -42,7 +42,7 @@ const CreateUser = () => {
 
           <div>
             <Button
-              role="create"
+              role={ROLES.CREATE_USER_BUTTON}
               type="submit"
               isLoading={formik.isSubmitting}
               text={TEXTS.CREATE_USER}

@@ -67,5 +67,5 @@ export const useUsers = () => {
     fetchUsers();
   }, []);
 
-  return { users, fetchUsers, deleteUser, handleLogout, navigate };
+  return { users, deleteUser, handleLogout, navigate };
 };

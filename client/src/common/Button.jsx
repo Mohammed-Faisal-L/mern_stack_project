@@ -1,30 +1,10 @@
-import React from "react";
-
-/**
- * Flexible Button component
- *
- * Props:
- * - text: string (display text)
- * - children: ReactNode (if you want custom content / icon)
- * - loadingText: string
- * - isLoading: boolean
- * - onClick: func
- * - type: "button" | "submit"
- * - role: string
- * - disabled: boolean
- * - variant: "primary" | "secondary" | "success" | "danger" | "outline" | "ghost"
- * - size: "xs" | "sm" | "md" | "lg"
- * - fullWidth: boolean
- * - rounded: "md" | "lg" | "full"
- * - className: string (extra classes)
- */
-
 const VARIANT_CLASSES = {
   primary: "bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500",
   secondary: "bg-gray-300 text-gray-700 hover:bg-gray-400 focus:ring-gray-400",
   success: "bg-green-500 text-white hover:bg-green-600 focus:ring-green-500",
   danger: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500",
-  outline: "border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-400",
+  outline:
+    "border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-400",
   ghost: "bg-transparent text-blue-600 hover:bg-blue-50 focus:ring-blue-500",
 };
 
@@ -63,7 +43,8 @@ const Button = ({
   const variantClass = VARIANT_CLASSES[variant] || VARIANT_CLASSES.primary;
   const sizeClass = SIZE_CLASSES[size] || SIZE_CLASSES.md;
   const roundedClass = ROUNDED[rounded] || ROUNDED.md;
-  const disabledClass = disabled || isLoading ? "opacity-70 cursor-not-allowed" : "";
+  const disabledClass =
+    disabled || isLoading ? "opacity-70 cursor-not-allowed" : "";
 
   const combined = `${base} ${variantClass} ${sizeClass} ${roundedClass} ${widthClass} ${disabledClass} ${className}`;
 
@@ -85,7 +66,14 @@ const Button = ({
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
             <path
               className="opacity-75"
               fill="currentColor"

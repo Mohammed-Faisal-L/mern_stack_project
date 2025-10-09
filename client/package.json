@@ -21,7 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test:all": "react-scripts test --watchAll=false",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -54,6 +55,9 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!axios)/",
       "/src/index.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/src/reportWebVitals.js$"
     ]
   }
 }

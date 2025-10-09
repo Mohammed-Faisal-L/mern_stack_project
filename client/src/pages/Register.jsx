@@ -1,4 +1,4 @@
-import { PLACEHOLDERS, TEXTS } from "../constants/text-constants";
+import { PLACEHOLDERS, ROLES, TEXTS } from "../constants/text-constants";
 import Header from "../common/Header";
 import Button from "../common/Button";
 import FormInput from "../common/FormInput";
@@ -52,7 +52,7 @@ const Register = () => {
         />
 
         <Button
-          role="register"
+          role={ROLES.REGISTER_BUTTON}
           type="submit"
           isLoading={formik.isSubmitting}
           text={TEXTS.REGISTER}

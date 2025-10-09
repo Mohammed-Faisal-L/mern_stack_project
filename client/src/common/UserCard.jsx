@@ -1,10 +1,11 @@
-import { TEXTS } from "../constants/text-constants";
+import { TEST_IDS, TEXTS } from "../constants/text-constants";
 import Button from "./Button";
 
 const UserCard = ({ user, onEdit, onDelete }) => (
   <div
     key={user._id}
     className="bg-white p-4 rounded-lg shadow-lg border border-gray-200"
+    data-testid={`user-card-${user._id}`}
   >
     <h2 className="text-xl font-semibold text-gray-800">{user.name}</h2>
     <p className="text-gray-600">
@@ -15,6 +16,7 @@ const UserCard = ({ user, onEdit, onDelete }) => (
     </p>
     <div className="flex justify-between mt-4">
       <Button
+        data-testid={TEST_IDS.EDIT_BUTTON(user._id)}
         onClick={onEdit}
         text={TEXTS.EDIT}
         variant="success"
@@ -23,6 +25,7 @@ const UserCard = ({ user, onEdit, onDelete }) => (
         rounded="md"
       />
       <Button
+        data-testid={TEST_IDS.DELETE_BUTTON(user._id)}
         onClick={onDelete}
         text={TEXTS.DELETE}
         variant="danger"

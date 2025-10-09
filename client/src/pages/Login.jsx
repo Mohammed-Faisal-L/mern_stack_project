@@ -1,4 +1,4 @@
-import { PLACEHOLDERS, TEXTS } from "../constants/text-constants";
+import { PLACEHOLDERS, ROLES, TEXTS } from "../constants/text-constants";
 import { ROUTES } from "../constants/route-constants";
 import Header from "../common/Header";
 import Button from "../common/Button";
@@ -33,7 +33,7 @@ const Login = () => {
           />
 
           <Button
-            role="login"
+            role={ROLES.LOGIN_BUTTON}
             type="submit"
             isLoading={formik.isSubmitting}
             text={TEXTS.LOGIN}
@@ -44,7 +44,7 @@ const Login = () => {
           />
 
           <Button
-            role="login"
+            role={ROLES.NO_ACCOUNT_BUTTON}
             type="button"
             onClick={() => navigate(ROUTES.REGISTER)}
             text={TEXTS.NO_ACCOUNT}

@@ -4,5 +4,5 @@ export const ROUTES = {
   CREATE: "/createUser",
   GET: "/getUsers",
   UPDATE: "/updateUser/:id",
-  UPDATES: (id) => `/updateUser/${id}`
+  UPDATES: (id) => `/updateUser/${id}`,
 };
