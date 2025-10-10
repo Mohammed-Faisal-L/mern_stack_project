@@ -14,6 +14,7 @@ const USER_MESSAGES = {
   DELETE_ERROR: "Error deleting user",
   REGISTER_SUCCESS: "User registered successfully",
   REGISTER_ERROR: "Error registering user",
+  NO_USERS_FOR_ACCOUNT: "No users found for this account",
 };
 
 const MESSAGES = {
@@ -22,6 +23,7 @@ const MESSAGES = {
   DB_CONNECTION_FAILED: "MongoDB connection failed:",
   INVALID_CREDENTIALS: "Invalid credentials",
   SERVER_RUNNING: (port) => `Server running on port ${port}...`,
+  GENERIC_ERROR: "Something went wrong",
 };
 
 module.exports = { USER_MESSAGES, MESSAGES };

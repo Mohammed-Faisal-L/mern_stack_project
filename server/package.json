@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "mern-app-backend",
   "version": "1.0.0",
   "description": "server side to communicate with mongodb",
   "main": "index.js",
@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.4",
     "nodemon": "^3.1.9"

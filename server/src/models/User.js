@@ -21,6 +21,11 @@ const UserSchema = mongoose.Schema({
     min: [18, SCHEMA_MESSAGES.AGE_MIN],
     max: [100, SCHEMA_MESSAGES.AGE_MAX],
   },
+  account: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "username",
+    required: true,
+  },
 });
 
 const UserModel = mongoose.model("user", UserSchema);

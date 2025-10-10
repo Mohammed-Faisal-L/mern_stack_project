@@ -5,9 +5,10 @@ const cookieParser = require("cookie-parser");
 const { dbConnect } = require("./config/mongoseConnection");
 const userRouter = require("./routes/userRoute");
 const authRoute = require("./routes/authRoute");
-const { userAuth } = require("./middleware/auth");
 const { MESSAGES } = require("./constants/message-constants");
 const { USER_ROUTES } = require("./constants/route-constants");
+const { errorHandler } = require("./middleware/errorHandler");
+const helmet = require("helmet");
 
 const server = express();
 
@@ -19,10 +20,12 @@ server.use(
 );
 server.use(express.json());
 server.use(cookieParser());
+server.use(helmet());
 
 server.use(USER_ROUTES.HOME, userRouter);
 server.use(USER_ROUTES.HOME, authRoute);
-server.use(USER_ROUTES.HOME, userAuth);
+
+server.use(errorHandler);
 
 dbConnect()
   .then(() => {
