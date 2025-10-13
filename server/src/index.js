@@ -14,7 +14,10 @@ const server = express();
 
 server.use(
   cors({
-    origin: ["http://localhost:3000", "https://userhub-manager.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://mern-stack-project-otmj.onrender.com",
+    ],
     credentials: true,
   })
 );
