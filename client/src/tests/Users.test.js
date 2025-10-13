@@ -31,12 +31,36 @@ const mockUsers = [
   { _id: "2", name: "Jane Smith", email: "jane@example.com", age: 30 },
 ];
 
-const renderUsers = () =>
+const renderUsersPage = () =>
   render(
     <MemoryRouter>
       <Users />
     </MemoryRouter>
   );
+
+const mockFetchUsers = (users = mockUsers, status = 200) => {
+  axios.get.mockResolvedValue({ status, data: users });
+};
+
+const clickAddUser = async () => {
+  const addButton = await screen.findByRole(ROLES.ADD_USER_BUTTON);
+  fireEvent.click(addButton);
+};
+
+const clickEditUser = async (index = 0) => {
+  const editButtons = await screen.findAllByTestId(TEST_IDS.EDIT_REGEX);
+  fireEvent.click(editButtons[index]);
+};
+
+const clickDeleteUser = async (index = 0) => {
+  const deleteButtons = await screen.findAllByTestId(TEST_IDS.DELETE_REGEX);
+  fireEvent.click(deleteButtons[index]);
+};
+
+const clickLogout = async () => {
+  const logoutButton = await screen.findByRole(ROLES.LOGOUT_BUTTON);
+  fireEvent.click(logoutButton);
+};
 
 describe("Users Component + useUsers Hook", () => {
   beforeEach(() => {
@@ -44,9 +68,8 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("renders users and buttons correctly", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
-
-    renderUsers();
+    mockFetchUsers();
+    renderUsersPage();
 
     const editButtons = await screen.findAllByTestId(TEST_IDS.EDIT_REGEX);
     const deleteButtons = await screen.findAllByTestId(TEST_IDS.DELETE_REGEX);
@@ -60,9 +83,8 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("renders correctly when no users are found", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: [] });
-
-    renderUsers();
+    mockFetchUsers([], 200);
+    renderUsersPage();
 
     const container = await screen.findByTestId(TEST_IDS.USERS_CONTAINER);
     expect(container).toBeInTheDocument();
@@ -71,52 +93,42 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles Add button click correctly", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
-
-    renderUsers();
-
-    const addButton = await screen.findByRole(ROLES.ADD_USER_BUTTON);
-    fireEvent.click(addButton);
-
+    mockFetchUsers();
+    renderUsersPage();
+    await clickAddUser();
     expect(mockNavigate).toHaveBeenCalledWith(ROUTES.CREATE);
   });
 
   it("handles Edit button click correctly", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
-
-    renderUsers();
-
-    const editButtons = await screen.findAllByTestId(TEST_IDS.EDIT_REGEX);
-    fireEvent.click(editButtons[0]);
-
+    mockFetchUsers();
+    renderUsersPage();
+    await clickEditUser();
     expect(mockNavigate).toHaveBeenCalledWith(ROUTES.UPDATES(mockUsers[0]._id));
   });
 
   it("handles Delete button click successfully", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.delete.mockResolvedValue({ status: 200 });
 
-    renderUsers();
-
-    const deleteButtons = await screen.findAllByTestId(TEST_IDS.DELETE_REGEX);
-    fireEvent.click(deleteButtons[0]);
+    renderUsersPage();
+    await clickDeleteUser();
 
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith(
         expect.stringContaining(mockUsers[0]._id),
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
     });
   });
 
   it("handles Logout button click successfully", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.post.mockResolvedValue({ status: 200 });
 
-    renderUsers();
-
-    const logoutButton = await screen.findByRole(ROLES.LOGOUT_BUTTON);
-    fireEvent.click(logoutButton);
+    renderUsersPage();
+    await clickLogout();
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith(TOAST_MESSAGES.LOGOUT_SUCCESS);
@@ -124,15 +136,13 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles Logout button error case", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.post.mockRejectedValue({
       response: { data: { message: ERROR.LOGOUT } },
     });
 
-    renderUsers();
-
-    const logoutButton = await screen.findByRole(ROLES.LOGOUT_BUTTON);
-    fireEvent.click(logoutButton);
+    renderUsersPage();
+    await clickLogout();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(ERROR.LOGOUT);
@@ -143,8 +153,7 @@ describe("Users Component + useUsers Hook", () => {
     axios.get.mockRejectedValue({
       response: { data: { message: ERROR.FETCH } },
     });
-
-    renderUsers();
+    renderUsersPage();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(ERROR.FETCH);
@@ -152,9 +161,8 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles non-200 response for fetchUsers", async () => {
-    axios.get.mockResolvedValueOnce({ status: 500, data: [] });
-
-    renderUsers();
+    mockFetchUsers([], 500);
+    renderUsersPage();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
@@ -164,12 +172,11 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles non-200 response for deleteUser", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.delete.mockResolvedValueOnce({ status: 500 });
 
-    renderUsers();
-    const deleteButtons = await screen.findAllByTestId(TEST_IDS.DELETE_REGEX);
-    fireEvent.click(deleteButtons[0]);
+    renderUsersPage();
+    await clickDeleteUser();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
@@ -179,12 +186,11 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles non-200 response for handleLogout", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.post.mockResolvedValueOnce({ status: 500 });
 
-    renderUsers();
-    const logoutButton = await screen.findByRole(ROLES.LOGOUT_BUTTON);
-    fireEvent.click(logoutButton);
+    renderUsersPage();
+    await clickLogout();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(TOAST_MESSAGES.LOGIN_ERROR);
@@ -193,8 +199,7 @@ describe("Users Component + useUsers Hook", () => {
 
   it("handles fetchUsers error with no response.data.message", async () => {
     axios.get.mockRejectedValue({});
-
-    renderUsers();
+    renderUsersPage();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
@@ -204,12 +209,11 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles deleteUser error with no response.data.message", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.delete.mockRejectedValue({});
 
-    renderUsers();
-    const deleteButtons = await screen.findAllByTestId(TEST_IDS.DELETE_REGEX);
-    fireEvent.click(deleteButtons[0]);
+    renderUsersPage();
+    await clickDeleteUser();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
@@ -219,12 +223,11 @@ describe("Users Component + useUsers Hook", () => {
   });
 
   it("handles handleLogout error with no response.data.message", async () => {
-    axios.get.mockResolvedValue({ status: 200, data: mockUsers });
+    mockFetchUsers();
     axios.post.mockRejectedValue({});
 
-    renderUsers();
-    const logoutButton = await screen.findByRole(ROLES.LOGOUT_BUTTON);
-    fireEvent.click(logoutButton);
+    renderUsersPage();
+    await clickLogout();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(TOAST_MESSAGES.LOGIN_ERROR);

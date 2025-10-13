@@ -18,12 +18,27 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
 }));
 
-const renderComponent = () =>
+const renderCreateUser = () =>
   render(
     <MemoryRouter>
       <CreateUser />
     </MemoryRouter>
   );
+
+const fillUserForm = (name, email, age) => {
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.NAME), {
+    target: { value: name },
+  });
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
+    target: { value: email },
+  });
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
+    target: { value: age },
+  });
+};
+
+const clickCreateUserButton = () =>
+  fireEvent.click(screen.getByRole(ROLES.CREATE_USER_BUTTON));
 
 describe("CreateUser Component", () => {
   beforeEach(() => {
@@ -33,66 +48,30 @@ describe("CreateUser Component", () => {
   it("handles successful user creation", async () => {
     axios.post.mockResolvedValueOnce({ status: 200 });
 
-    renderComponent();
+    renderCreateUser();
+    fillUserForm("John", "john@example.com", "25");
+    clickCreateUserButton();
 
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.NAME), {
-      target: { value: "John" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "john@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.CREATE_USER_BUTTON));
-
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(axios.post).toHaveBeenCalled());
   });
 
   it("handles not successful user creation", async () => {
     axios.post.mockResolvedValueOnce({ status: 400 });
 
-    renderComponent();
+    renderCreateUser();
+    fillUserForm("Wrong", "wrong@example.com", "25");
+    clickCreateUserButton();
 
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.NAME), {
-      target: { value: "Wrong" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "wrong@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.CREATE_USER_BUTTON));
-
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(axios.post).toHaveBeenCalled());
   });
 
   it("handles API failure", async () => {
     axios.post.mockRejectedValueOnce(new Error(ERROR.API));
 
-    renderComponent();
+    renderCreateUser();
+    fillUserForm("John", "john@example.com", "25");
+    clickCreateUserButton();
 
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.NAME), {
-      target: { value: "John" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "john@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.CREATE_USER_BUTTON));
-
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(axios.post).toHaveBeenCalled());
   });
 });

@@ -60,6 +60,7 @@ export const TOAST_MESSAGES = {
 
 export const ROLES = {
   APP: "app",
+  EYE: "eye",
   STATUS: "status",
   LOGIN_BUTTON: "login",
   REGISTER_BUTTON: "register",

@@ -24,12 +24,35 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
 }));
 
-const renderComponent = () =>
+const renderRegister = () =>
   render(
     <MemoryRouter>
       <Register />
     </MemoryRouter>
   );
+
+const fillRegisterForm = ({
+  username = "faisal",
+  email = "faisal@example.com",
+  age = "25",
+  password = "123456",
+} = {}) => {
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.USERNAME), {
+    target: { value: username },
+  });
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
+    target: { value: email },
+  });
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
+    target: { value: age },
+  });
+  fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.PASSWORD), {
+    target: { value: password },
+  });
+};
+
+const clickRegisterButton = () =>
+  fireEvent.click(screen.getByRole(ROLES.REGISTER_BUTTON));
 
 describe("Register Component", () => {
   beforeEach(() => {
@@ -39,47 +62,19 @@ describe("Register Component", () => {
   it("handles successful registration (status 201)", async () => {
     axios.post.mockResolvedValueOnce({ status: 201 });
 
-    renderComponent();
+    renderRegister();
+    fillRegisterForm();
+    clickRegisterButton();
 
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.USERNAME), {
-      target: { value: "faisal" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "faisal@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.PASSWORD), {
-      target: { value: "123456" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.REGISTER_BUTTON));
-
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(axios.post).toHaveBeenCalled());
   });
 
   it("handles non-201 response (failure)", async () => {
     axios.post.mockResolvedValueOnce({ status: 400 });
 
-    renderComponent();
-
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.USERNAME), {
-      target: { value: "faisal" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "faisal@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.PASSWORD), {
-      target: { value: "123456" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.REGISTER_BUTTON));
+    renderRegister();
+    fillRegisterForm();
+    clickRegisterButton();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(TOAST_MESSAGES.REGISTER_ERROR);
@@ -91,22 +86,9 @@ describe("Register Component", () => {
       response: { data: { message: ERROR.EMAIL } },
     });
 
-    renderComponent();
-
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.USERNAME), {
-      target: { value: "faisal" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "faisal@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.PASSWORD), {
-      target: { value: "123456" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.REGISTER_BUTTON));
+    renderRegister();
+    fillRegisterForm();
+    clickRegisterButton();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(ERROR.EMAIL);
@@ -116,22 +98,9 @@ describe("Register Component", () => {
   it("handles API error without response (network error)", async () => {
     axios.post.mockRejectedValueOnce(new Error(ERROR.NETWORK));
 
-    renderComponent();
-
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.USERNAME), {
-      target: { value: "faisal" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "faisal@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.PASSWORD), {
-      target: { value: "123456" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.REGISTER_BUTTON));
+    renderRegister();
+    fillRegisterForm();
+    clickRegisterButton();
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
@@ -143,22 +112,9 @@ describe("Register Component", () => {
   it("navigates to home and shows success toast on successful registration", async () => {
     axios.post.mockResolvedValueOnce({ status: 201 });
 
-    renderComponent();
-
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.USERNAME), {
-      target: { value: "faisal" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.EMAIL), {
-      target: { value: "faisal@example.com" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.AGE), {
-      target: { value: "25" },
-    });
-    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDERS.PASSWORD), {
-      target: { value: "123456" },
-    });
-
-    fireEvent.click(screen.getByRole(ROLES.REGISTER_BUTTON));
+    renderRegister();
+    fillRegisterForm();
+    clickRegisterButton();
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith(
