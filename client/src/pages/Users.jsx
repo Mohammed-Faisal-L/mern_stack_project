@@ -12,7 +12,7 @@ const Users = () => {
       data-testid="users-container"
       className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8"
     >
-      <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md">
+      <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <Button
             role={ROLES.ADD_USER_BUTTON}
