@@ -14,12 +14,7 @@ userRouter.get(
   async (request, response, next) => {
     try {
       const users = await UserModel.find({ account: request.user._id });
-      if (!users || users.length === 0)
-        throw new CustomError(
-          USER_MESSAGES.NO_USERS_FOR_ACCOUNT,
-          STATUS_CODES.NOT_FOUND
-        );
-      response.json(users);
+      response.json(users || []);
     } catch (error) {
       next(error);
     }

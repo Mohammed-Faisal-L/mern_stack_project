@@ -5,7 +5,7 @@ import { useUsers } from "../hooks/useUsers";
 import UserCard from "../common/UserCard";
 
 const Users = () => {
-  const { users, deleteUser, handleLogout, navigate } = useUsers();
+  const { users, deleteUser, handleLogout, navigate, loading } = useUsers();
 
   return (
     <div
@@ -33,14 +33,30 @@ const Users = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {users.map((user) => (
-            <UserCard
-              key={user._id}
-              user={user}
-              onEdit={() => navigate(ROUTES.UPDATES(user._id))}
-              onDelete={() => deleteUser(user._id)}
-            />
-          ))}
+          {(() => {
+            if (loading) {
+              return (
+                <p className="text-gray-500 text-lg text-center col-span-full mt-6">
+                  {TEXTS.LOADING}
+                </p>
+              );
+            }
+            if (users.length === 0) {
+              return (
+                <p className="text-gray-500 text-lg text-center col-span-full mt-6">
+                  {TEXTS.ADD_USER}
+                </p>
+              );
+            }
+            return users.map((user) => (
+              <UserCard
+                key={user._id}
+                user={user}
+                onEdit={() => navigate(ROUTES.UPDATES(user._id))}
+                onDelete={() => deleteUser(user._id)}
+              />
+            ));
+          })()}
         </div>
       </div>
     </div>

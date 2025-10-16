@@ -9,8 +9,10 @@ import { TOAST_MESSAGES } from "../constants/text-constants";
 export const useUsers = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(USER_API.GET_ALL, {
         withCredentials: true,
@@ -25,6 +27,8 @@ export const useUsers = () => {
       toast.error(
         error.response?.data?.message || TOAST_MESSAGES.USERS_FETCH_ERROR
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,7 +39,7 @@ export const useUsers = () => {
       });
       if (response.status === 200) {
         toast.success(TOAST_MESSAGES.USER_DELETE_SUCCESS);
-        fetchUsers();
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
       } else toast.error(TOAST_MESSAGES.USER_DELETE_ERROR);
     } catch (error) {
       console.error(
@@ -67,5 +71,11 @@ export const useUsers = () => {
     fetchUsers();
   }, []);
 
-  return { users, deleteUser, handleLogout, navigate };
+  return {
+    users,
+    deleteUser,
+    handleLogout,
+    navigate,
+    loading,
+  };
 };

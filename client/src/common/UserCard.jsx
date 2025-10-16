@@ -28,6 +28,7 @@ const UserCard = ({ user, onEdit, onDelete }) => (
         data-testid={TEST_IDS.DELETE_BUTTON(user._id)}
         onClick={onDelete}
         text={TEXTS.DELETE}
+        loadingText={TEXTS.DELETING}
         variant="danger"
         size="sm"
         fullWidth={false}
